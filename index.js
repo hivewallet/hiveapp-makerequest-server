@@ -3,6 +3,7 @@
 var http = require('http');
 var router = require('router');
 var url = require('url');
+var sleep = require('sleep');
 
 var route = router();
 route.get('/test1', function(req, res) {
@@ -43,6 +44,12 @@ route.post('/test5', function(req, res) {
         res.end('Successful');
     else
         res.end('Failed');
+});
+
+route.get('/test6', function(req, res) {
+    sleep.sleep(12);
+    res.writeHead(200);
+    res.end('Successful');
 });
 
 var server = http.createServer(route);
