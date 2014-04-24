@@ -3,6 +3,7 @@
 var http = require('http');
 var router = require('router');
 var url = require('url');
+var qs = require('querystring');
 var sleep = require('sleep');
 
 var route = router();
@@ -35,15 +36,19 @@ route.get('/test4', function(req, res) {
 });
 
 route.post('/test5', function(req, res) {
-    var urlParts = url.parse(req.url, true);
-    var query = urlParts.query;
+    var body = '';
+    req.on('data', function (data) {
+        body += data;
+    });
+    req.on('end', function () {
+        var query = qs.parse(body);
 
-    res.writeHead(200);
-
-    if (query['arg0'] === 'zero' && query['arg1'] == 1)
-        res.end('Successful');
-    else
-        res.end('Failed');
+        res.writeHead(200);
+        if (query['arg0'] === 'zero' && query['arg1'] == 1)
+            res.end('Successful');
+        else
+            res.end('Failed');
+    });
 });
 
 route.get('/test6', function(req, res) {
